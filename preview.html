@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>iGet Sync - Secure Download</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Inter, Arial, sans-serif;
+    }
+
+    body{
+      min-height:100vh;
+      background:linear-gradient(135deg,#020617,#0f172a);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      overflow:hidden;
+      color:white;
+    }
+
+    body::before{
+      content:"";
+      position:absolute;
+      width:500px;
+      height:500px;
+      background:#2563eb;
+      filter:blur(180px);
+      opacity:.12;
+      border-radius:50%;
+    }
+
+    .container{
+      position:relative;
+      z-index:2;
+      width:400px;
+      background:rgba(15,23,42,.92);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:28px;
+      padding:34px;
+      text-align:center;
+      box-shadow:0 30px 90px rgba(0,0,0,.45);
+      backdrop-filter:blur(12px);
+    }
+
+    .logo{
+      font-size:15px;
+      font-weight:700;
+      color:#60a5fa;
+      margin-bottom:14px;
+      letter-spacing:.5px;
+    }
+
+    h1{
+      font-size:30px;
+      margin-bottom:12px;
+    }
+
+    .desc{
+      color:#94a3b8;
+      font-size:14px;
+      line-height:1.7;
+      margin-bottom:28px;
+    }
+
+    .download-btn{
+      width:100%;
+      padding:15px;
+      border:none;
+      border-radius:16px;
+      background:#2563eb;
+      color:white;
+      font-size:15px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.25s;
+      box-shadow:0 12px 30px rgba(37,99,235,.25);
+    }
+
+    .download-btn:hover{
+      background:#1d4ed8;
+      transform:translateY(-2px);
+    }
+
+    .popup{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.7);
+      display:none;
+      justify-content:center;
+      align-items:center;
+      backdrop-filter:blur(8px);
+      z-index:999;
+    }
+
+    .popup-box{
+      width:360px;
+      background:#0f172a;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:24px;
+      padding:28px;
+      box-shadow:0 30px 90px rgba(0,0,0,.5);
+      animation:popup .25s ease;
+    }
+
+    @keyframes popup{
+      from{
+        opacity:0;
+        transform:scale(.92);
+      }
+      to{
+        opacity:1;
+        transform:scale(1);
+      }
+    }
+
+    .popup-box h2{
+      margin-bottom:8px;
+      font-size:22px;
+    }
+
+    .popup-box p{
+      color:#94a3b8;
+      font-size:14px;
+      margin-bottom:20px;
+      line-height:1.6;
+    }
+
+    .popup-box input{
+      width:100%;
+      padding:14px;
+      border-radius:14px;
+      border:1px solid #334155;
+      background:#020617;
+      color:white;
+      outline:none;
+      font-size:14px;
+      transition:.2s;
+    }
+
+    .popup-box input:focus{
+      border-color:#2563eb;
+      box-shadow:0 0 0 4px rgba(37,99,235,.15);
+    }
+
+    .actions{
+      display:flex;
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .actions button{
+      flex:1;
+      padding:13px;
+      border:none;
+      border-radius:14px;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.2s;
+    }
+
+    .cancel{
+      background:#1e293b;
+      color:#cbd5e1;
+    }
+
+    .cancel:hover{
+      background:#334155;
+    }
+
+    .submit{
+      background:#2563eb;
+      color:white;
+    }
+
+    .submit:hover{
+      background:#1d4ed8;
+    }
+
+    .error{
+      color:#f87171;
+      font-size:13px;
+      margin-top:14px;
+    }
+
+    .footer{
+      margin-top:20px;
+      font-size:12px;
+      color:#64748b;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="logo">iGet Sync</div>
+
+    <h1>Secure Download</h1>
+
+    <div class="desc">
+      Download official tools with password verification access.
+    </div>
+
+    <button class="download-btn" onclick="openPopup()">
+      Download Tools
+    </button>
+
+    <div class="footer">
+      Protected Access • iGet Sync
+    </div>
+
+  </div>
+
+  <div class="popup" id="popup">
+
+    <div class="popup-box">
+
+      <div class="logo">iGet Sync</div>
+
+      <h2>Password Verification</h2>
+
+      <p>
+        Enter your password to continue the download process.
+      </p>
+
+      <input
+        type="password"
+        id="password"
+        placeholder="Enter password"
+        autocomplete="off"
+      >
+
+      <div class="actions">
+        <button class="cancel" onclick="closePopup()">
+          Cancel
+        </button>
+
+        <button class="submit" onclick="checkPassword()">
+          Download
+        </button>
+      </div>
+
+      <div class="error" id="error"></div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    const correctPassword = "igetjakarta";
+
+    const downloadLink = "https://iget21.github.io/iget-sync-ota-block/OTABLOCK.mobileconfig";
+
+    function openPopup(){
+      document.getElementById("popup").style.display = "flex";
+      document.getElementById("password").focus();
+    }
+
+    function closePopup(){
+      document.getElementById("popup").style.display = "none";
+      document.getElementById("password").value = "";
+      document.getElementById("error").innerHTML = "";
+    }
+
+    function checkPassword(){
+
+      const password =
+        document.getElementById("password").value.trim();
+
+      if(password === correctPassword){
+
+        window.location.href = downloadLink;
+
+        closePopup();
+
+      } else {
+
+        document.getElementById("error").innerHTML =
+          "Incorrect password. Please try again.";
+
+      }
+
+    }
+
+    document.addEventListener("keydown", function(e){
+
+      if(e.key === "Enter"){
+        checkPassword();
+      }
+
+      if(e.key === "Escape"){
+        closePopup();
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>
