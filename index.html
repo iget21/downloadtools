@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>iGet Sync - Pro Console</title>
+  <title>iGet Sync </title>
   <style>
     /* Cyber Terminal / Developer Console Theme */
     :root {
@@ -215,7 +215,7 @@
 
     /* === MODAL / POP-UP STYLES === */
     .modal-overlay {
-      display: none;
+      display: none; /* By default hidden, kecuali yang di-override via inline HTML */
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0, 0, 0, 0.85);
@@ -363,7 +363,7 @@
     </div>
   </div>
 
-  <div id="hardwareWarningModal" class="modal-overlay">
+  <div id="hardwareWarningModal" class="modal-overlay" style="display: flex;">
     <div class="modal-content" style="border-color: var(--accent-red); box-shadow: 0 0 20px rgba(255, 0, 60, 0.15);">
       <div class="modal-header" style="color: var(--accent-red); border-color: var(--accent-red);">
         >_ SYSTEM_ALERT // HARDWARE_REQUIRED
@@ -419,15 +419,10 @@
       return String(value || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
     }
 
-    // === KONTROL POP-UP PERINGATAN A12/A13 ===
+    // === KONTROL TUTUP POP-UP PERINGATAN A12/A13 ===
     function closeWarningPopup() {
       document.getElementById('hardwareWarningModal').style.display = 'none';
     }
-
-    // Tampilkan pop-up peringatan hardware saat web pertama dibuka
-    window.addEventListener('load', function() {
-      document.getElementById('hardwareWarningModal').style.display = 'flex';
-    });
 
     // === FUNGSI KONTROL POP-UP DOWNLOAD ===
     function openPopup(link, name) {
