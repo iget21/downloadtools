@@ -281,6 +281,17 @@
       color: var(--accent-cyan);
     }
     .btn-confirm:hover { background: var(--accent-cyan); color: var(--bg-color); box-shadow: 0 0 10px var(--accent-cyan); }
+    
+    /* Tombol Peringatan Merah */
+    .btn-warning {
+      border-color: var(--accent-red);
+      color: var(--accent-red);
+    }
+    .btn-warning:hover {
+      background: var(--accent-red);
+      color: var(--bg-color);
+      box-shadow: 0 0 10px var(--accent-red);
+    }
   </style>
 </head>
 <body>
@@ -352,6 +363,33 @@
     </div>
   </div>
 
+  <div id="hardwareWarningModal" class="modal-overlay">
+    <div class="modal-content" style="border-color: var(--accent-red); box-shadow: 0 0 20px rgba(255, 0, 60, 0.15);">
+      <div class="modal-header" style="color: var(--accent-red); border-color: var(--accent-red);">
+        >_ SYSTEM_ALERT // HARDWARE_REQUIRED
+      </div>
+      
+      <div class="modal-body">
+        <strong style="color: var(--accent-red);">[!] PERHATIAN KHUSUS DEVICE A12 & A13</strong><br><br>
+        Untuk penanganan device dengan chipset <strong>A12 dan A13</strong>, Anda tidak bisa mengeksekusinya hanya menggunakan PC saja. Metode ini membutuhkan injeksi exploit <strong style="color: var(--accent-cyan);">USBLiter8</strong> langsung ke dalam <em>bootrom</em> device.<br><br>
+        
+        Oleh karena itu, Anda <span style="color: var(--accent-red); font-weight: bold;">WAJIB</span> menggunakan alat pendukung berikut:<br>
+        
+        <div style="background: rgba(255, 0, 60, 0.05); border: 1px dashed var(--accent-red); padding: 15px; margin-top: 10px;">
+          <span style="font-size: 12px; color: var(--text-muted);">>_ REKOMENDASI ALAT (HARDWARE):</span><br>
+          <ul style="color: var(--text-main); font-family: var(--font-mono); font-size: 13px; margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+            <li>Waveshare RP2350 USB-A</li>
+            <li>Raspberry Pi Pico 2</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="modal-actions">
+        <button class="btn-modal btn-warning" onclick="closeWarningPopup()">[ SAYA MENGERTI ]</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // === PENGAMANAN: MATIKAN KLIK KANAN & DEV TOOLS ===
     document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
@@ -381,7 +419,17 @@
       return String(value || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
     }
 
-    // === FUNGSI KONTROL POP-UP YANG SUDAH DIUBAH ===
+    // === KONTROL POP-UP PERINGATAN A12/A13 ===
+    function closeWarningPopup() {
+      document.getElementById('hardwareWarningModal').style.display = 'none';
+    }
+
+    // Tampilkan pop-up peringatan hardware saat web pertama dibuka
+    window.addEventListener('load', function() {
+      document.getElementById('hardwareWarningModal').style.display = 'flex';
+    });
+
+    // === FUNGSI KONTROL POP-UP DOWNLOAD ===
     function openPopup(link, name) {
       document.getElementById('modalTitle').innerText = ">_ REQUEST: " + name;
       const confirmBtn = document.getElementById('confirmDownloadBtn');
